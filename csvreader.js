@@ -91,6 +91,9 @@ function arrayOfArraysToCSVString(myArray) {
     let str = "";
     for (let i = 0; i < myArray.length; i++) {
         for (let j = 0; j < myArray[i].length; j++) {
+            if (myArray[i][j][0]!=='"'){
+                myArray[i][j]='"'+myArray[i][j]+'"';
+            }
             str = str += myArray[i][j] + ",";
         }
         str = str.slice(0, -1);
@@ -139,24 +142,50 @@ function arrayOfArraysToJSON(arrayOfArrays, usingHeaders = true) {
     return(table);
 }
 
+function formattedJSONToCSV(jsonObject){
+    let headers=jsonObject["headers"];
+    let data=jsonObject["data"];
+    let str="";
+    for (let i=0;i<headers.length;i++){
+        str+=headers[i]+",";
+    }
+    str=str.slice(0,-1)+"\n";
+    for (let j=0;j<data.length;j++){
+        for (let i=0;i<headers.length;i++){
+            str+=data[j][headers[i]]+",";
+        }   
+        str=str.slice(0,-1)+"\n";
+    }
+    return str;
+}
 
-let newText = quoteAllCSVCells(contents);
+
+//let newText = quoteAllCSVCells(contents);
+let newText=contents;
 console.log(contents);
 console.log(newText);
+console.log("CSVToArrayOfArrays!!!");
 let thisArray = CSVToArrayOfArrays(newText);
+console.log("thisArray!!!");
 console.log(thisArray);
 
-
+console.log("arrayOfArraysToCSVString!!!");
 let newCSV = arrayOfArraysToCSVString(thisArray);
 console.log(newCSV);
 
-fs.writeFileSync("testresult.csv", newText, "utf8");
+// fs.writeFileSync("testresult.csv", newText, "utf8");
 
 fs.writeFileSync("testresult2.csv", newCSV, "utf8");
 
 console.log("whole thing");
 console.log("---------------------");
-console.log(arrayOfArraysToJSON(thisArray,false));
+console.log(arrayOfArraysToJSON(thisArray,true));
 console.log("just data");
 console.log("---------------------");
-console.log(arrayOfArraysToJSON(thisArray,false)["data"]);
+console.log(arrayOfArraysToJSON(thisArray,true)["data"]);
+console.log(arrayOfArraysToJSON(thisArray,true)["data"][0]['"Age"']);
+
+// console.log(thisArray);
+// let thisObject = arrayOfArraysToJSON(thisArray,true);
+// console.log(thisObject);
+// console.log(formattedJSONToCSV(thisObject));

@@ -1,4 +1,4 @@
-Age,Sex,Name
-49,Male,Gary
+"Age",Sex,Name
+49,Male,"Gary's ""cool"""
 50,Female,Amelia
 19,Male,Harrison

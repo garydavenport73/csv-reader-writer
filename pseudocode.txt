@@ -1,3 +1,6 @@
+
+
+
 replace , with special character
 
 
@@ -24,7 +27,7 @@ O Need function to write array of arrays to CSV                     X arrayOfArr
 O Need function to convert array of arrays to json += headers       arrayOfArraysToJSON(arrayOfArrays,usingHeaders)
 
 
-O Need function to convert json to CSV using headers or not         formattedJSONToCSV(jsonObject,usingHeaders);
+O Need function to convert json to CSV using headers                formattedJSONToCSV(jsonObject);
 
 
 O Need function to convert unordered JSON to CSV                    unformattedJSONToCSV(jsonObject, usingHeaders);
@@ -34,4 +37,20 @@ O Need combined function to go from CSV to json                     CSVToJSON(cs
 
 
 
+
+Revisions to be made:
+Overall notes...
+
+If a cell is read in by csv destined for array element:
+1) if it contains outer quotes, remove them
+2) then replace interior double quotes "" with "
+So process is to:
+    -split by "real commas"
+    -remove outer quotes if present
+    -replace interior "" with "
+
+If array element is being written to csv
+    replace interior "" with "
+    place outer quotes
+    join with comma
 
