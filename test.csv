@@ -1,4 +1,4 @@
-"Age",Sex,Name
-49,Male,"Gary's ""cool"""
-50,Female,Amelia
-19,Male,Harrison
+"Age",Sex,Name,Name
+49,Male,"Gary's ""cool""","Davenport"
+50,Female,Amelia,McPeak
+19,Male,Harrison,Davenport
