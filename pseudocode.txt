@@ -32,26 +32,18 @@ X Need function to convert unordered JSON to Array of Arrays using headers (will
 
 
 /////////////////////////////////////////////////////////////////////////////////////
-CSV <===> Arrays    (headers will match)
 
-1) CSV->Arrays
-2) Arrays->CSV
-
-3) Array to JSON (JSON object must have headers, if not using will make), need to know if Array includes header
-4) JSON to Array (JSON object must have headers) need to know if Array will include header
-
-5) unorderdJSON to Array, build headers, then use JSON to Array (4);
+FUNCTION NAME                                       INPUT                                           OUTPUT                         
+csvToArrays(csvString)                              csv                                             array of arrays                                 
+arraysToCsv(arrayOfArrays)                          array of arrays                                 csv                                             
+arraysToJSON(arrays, usingHeaders)                  array of arrays                                 JSON {["headers"]=[],["data"]=[{},{},{}...]}  
+JSONToArrays(jsonObject, includeHeaders)            JSON {["headers"]=[],["data"]=[{},{},{}...]}    array of arrays
+unorderdJSONToArrays(jsonObject,includeHeaders)     JSON [{"key":"value"},{k:v},...]                array of arrays
 
 Composite Functions:
-CSV to JSON
-CSV->Arrays->(using headers?)->JSON (header+data);
-
-JSON to CSV
-JSON (header + data, if no header, build) -> Array (include header?) ->CSV
-
-unordered.
-*CSV to unorderd JSON (just use data without header);
-unorderdJSON to CSV, use unorderdJSON to orderedJSON with data and header
+csvToJSON(csvString, usingHeaders)                  csv                                             JSON {["headers"]=[],["data"]=[{},{},{}...]}                                            
+JSONToCSV(jsonObject, includeHeaders)               JSON {["headers"]=[],["data"]=[{},{},{}...]}    csv
+unorderedJSONToCsv(jsonObject, includeHeaders)      JSON [{"key":"value"},{k:v},...]                csv
 //////////////////////////////////////////////////////////////////////////////////////
 
 

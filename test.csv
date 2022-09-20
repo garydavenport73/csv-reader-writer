@@ -1,4 +1,3 @@
-"Age",Sex,Name,Name
-49,Male,"Gary's ""cool""","Davenport"
-50,Female,Amelia,McPeak
-19,Male,Harrison,Davenport
+"Las Vegas",San Jose,"Fairpoint","San"",""Diego","Boston",New York
+"Las Vegas","San Jose",Fairpoint,San Diego,"Boston",New York
+"Las Vegas","San Jose","Fairpoint","San Diego","Boston","New York"
