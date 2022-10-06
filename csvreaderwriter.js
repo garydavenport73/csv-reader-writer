@@ -1,17 +1,17 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                                                                   //
-// FUNCTION NAME                                       INPUT                                           OUTPUT                                        //
-// csvToArrays(csvString)                              csv                                             array of arrays                               //
-// arraysToCSV(arrayOfArrays)                          array of arrays                                 csv                                           //
-// arraysToJSON(arrays, usingHeaders)                  array of arrays                                 JSON {["headers"]=[],["data"]=[{},{},{}...]}  //
-// JSONToArrays(jsonObject, includeHeaders)            JSON {["headers"]=[],["data"]=[{},{},{}...]}    array of arrays                               //
-// unorderdJSONToArrays(jsonObject,includeHeaders)     JSON [{"key":"value"},{k:v},...]                array of arrays                               //
-//                                                                                                                                                   //
-// COMPOSITE FUNCTIONS:                                                                                                                              //
-// csvToJSON(csvString, usingHeaders)                  csv                                             JSON {["headers"]=[],["data"]=[{},{},{}...]}  //                                        
-// JSONToCSV(jsonObject, includeHeaders)               JSON {["headers"]=[],["data"]=[{},{},{}...]}    csv                                           //
-// unorderedJSONToCSV(jsonObject, includeHeaders)      JSON [{"key":"value"},{k:v},...]                csv                                           //
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                                                                                //
+// FUNCTION NAME                                       				INPUT                                           OUTPUT                                        //
+// csvToArrays(csvString)                              				csv                                             array of arrays                               //
+// arraysToCSV(arrayOfArrays,newLineString="\n")       				array of arrays, "\n" or "\r\n"                 csv                                           //
+// arraysToJSON(arrays, usingHeaders)                  				array of arrays                                 JSON {["headers"]=[],["data"]=[{},{},{}...]}  //
+// JSONToArrays(jsonObject, includeHeaders)            				JSON {["headers"]=[],["data"]=[{},{},{}...]}    array of arrays                               //
+// unorderdJSONToArrays(jsonObject,includeHeaders)     				JSON [{"key":"value"},{k:v},...]                array of arrays                               //
+//                                                                                                                                                                //
+// COMPOSITE FUNCTIONS:                                                                                                                                           //
+// csvToJSON(csvString, usingHeaders)                  				csv                                             JSON {["headers"]=[],["data"]=[{},{},{}...]}  //                                        
+// JSONToCSV(jsonObject, includeHeaders=true,newLineString="\n")	JSON {["headers"]=[],["data"]=[{},{},{}...]}    csv                                           //
+// unorderedJSONToCSV(jsonObject, includeHeaders)      				JSON [{"key":"value"},{k:v},...]                csv                                           //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function _replaceRealCommasAndRealNewlinesInCSV(contents, commaReplacement, newlineReplacment) {
     let newContents = "";
@@ -43,6 +43,9 @@ function _replaceRealCommasAndRealNewlinesInCSV(contents, commaReplacement, newl
             newContents += thisChar;
         }
     }
+    //new added this will replace the "\r\n" with "\n", some programs
+    //use the \r\n (ms outlook for example) instead of \n
+    newContents.split("\r"+newLineReplacement).join(newLineReplacement);
     return (newContents);
 }
 
@@ -100,7 +103,7 @@ function csvToArrays(CSVString) {
     return myArray;
 }
 
-function arraysToCSV(arrayOfArrays) {
+function arraysToCSV(arrayOfArrays, newLineString="\n") {
     let CSVString = "";
     //go through each 'line'
     for (let i = 0; i < arrayOfArrays.length; i++) {
@@ -110,9 +113,9 @@ function arraysToCSV(arrayOfArrays) {
             CSVString += arrayOfArrays[i][j].split('"').join('""');
             CSVString += '",'
         }
-        CSVString = CSVString.slice(0, -1) + '\n'; //takes off last comma and adds new line
+        CSVString = CSVString.slice(0, -1) + newLineString; //takes off last comma and adds new line
     }
-    CSVString = CSVString.slice(0, -1); //takes off last \n character
+    CSVString = CSVString.slice(0, -(newLineString.length)); //takes off last \n character
     return CSVString;
 }
 
@@ -206,9 +209,9 @@ function csvToJSON(csvString, usingHeaders = true) {
     return jsonObject;
 }
 
-function JSONToCSV(jsonObject, includeHeaders = true) {
+function JSONToCSV(jsonObject, includeHeaders = true, newLineString="\n") {
     let arrays = JSONToArrays(jsonObject, includeHeaders);
-    let csvString = arraysToCSV(arrays);
+    let csvString = arraysToCSV(arrays, newLineString);
     return csvString;
 }
 
