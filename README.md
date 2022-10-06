@@ -27,3 +27,13 @@
 3) The CSV lines are split by the newline character "\n", so long as it is not in the interior of a cell.  
 
 4) If the "\n" is in a cell, it should be inside quotations, else it will be interpreted as a new line.
+
+## New change 10/5/2022
+
+Now you can make the CSV with CR+LF (Carriage Return + Line Feed), instead of just LF or new line.
+Some programs like MS Outlook will use 2 characters like "\r\n" instead of unix like new lines like "\n".
+This will allow you to write CSV that can be read in by programs that require this.  I ran into a problem
+trying to import some csv into Outlook so I made this modification.
+
+When using in reverse, ie reading in csv using "\r\n" as the end of line string and converting to JSON or
+an array of arrays, it will detect the "\n" and do away with the extra "\r" when converting.
