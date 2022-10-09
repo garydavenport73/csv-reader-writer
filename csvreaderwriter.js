@@ -13,7 +13,7 @@
 // unorderedJSONToCSV(jsonObject, includeHeaders)      				JSON [{"key":"value"},{k:v},...]                csv                                           //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-function _replaceRealCommasAndRealNewlinesInCSV(contents, commaReplacement, newlineReplacment) {
+function _replaceRealCommasAndRealNewlinesInCSV(contents, commaReplacement, newlineReplacement) {
     let newContents = "";
     let inside = -1;
     for (let i = 0; i < contents.length; i++) {
@@ -32,7 +32,7 @@ function _replaceRealCommasAndRealNewlinesInCSV(contents, commaReplacement, newl
         }
         else if (thisChar === "\n") {
             if (inside === -1) {//\n is outside of quotes, replace
-                newContents += newlineReplacment;
+                newContents += newlineReplacement;
             }
             else {//comma is inside of quotes, don't replace
                 newContents += thisChar;
@@ -45,7 +45,7 @@ function _replaceRealCommasAndRealNewlinesInCSV(contents, commaReplacement, newl
     }
     //new added this will replace the "\r\n" with "\n", some programs
     //use the \r\n (ms outlook for example) instead of \n
-    newContents.split("\r"+newLineReplacement).join(newLineReplacement);
+    newContents.split("\r"+newlineReplacement).join(newlineReplacement);
     return (newContents);
 }
 
