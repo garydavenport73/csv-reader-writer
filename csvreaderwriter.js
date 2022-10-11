@@ -14,6 +14,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 function _replaceRealCommasAndRealNewlinesInCSV(contents, commaReplacement, newlineReplacement) {
+	//temp fix
+	contents=contents.split("\r\n").join("\n");
+	//temp fix
     let newContents = "";
     let inside = -1;
     for (let i = 0; i < contents.length; i++) {
@@ -45,7 +48,9 @@ function _replaceRealCommasAndRealNewlinesInCSV(contents, commaReplacement, newl
     }
     //new added this will replace the "\r\n" with "\n", some programs
     //use the \r\n (ms outlook for example) instead of \n
-    newContents.split("\r"+newlineReplacement).join(newlineReplacement);
+    //newContents=JSON.stringify(newContents);
+    //newContents.split("\"\r"+newlineReplacement).join(newlineReplacement);
+    //newContents=JSON.parse(newContents);
     return (newContents);
 }
 
