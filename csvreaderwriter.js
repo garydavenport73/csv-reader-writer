@@ -13,10 +13,84 @@
 // unorderedJSONToCSV(jsonObject, includeHeaders)      				JSON [{"key":"value"},{k:v},...]                csv                                           //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+
+function _replaceReallCommmasInCSV(contents, commaReplacement) {
+
+    //temp fix
+    //contents=contents.split("\r\n").join("\n");
+    //temp fix
+    let newContents = "";
+    let inside = -1;
+    for (let i = 0; i < contents.length; i++) {
+        let thisChar = contents.charAt(i);
+        if (thisChar === '"') {
+            inside = inside * -1;
+            newContents += thisChar;
+        }
+        else if (thisChar === ",") {
+            if (inside === -1) {//comma is outside of quotes, replace
+                newContents += commaReplacement;
+            }
+            else {//comma is inside of quotes, don't replace
+                newContents += thisChar;
+            }
+        }
+        // else if (thisChar === "\n") {
+        //     if (inside === -1) {//\n is outside of quotes, replace
+        //         newContents += newlineReplacement;
+        //     }
+        //     else {//comma is inside of quotes, don't replace
+        //         newContents += thisChar;
+        //     }
+        // }
+        else {
+            newContents += thisChar;
+        }
+    }
+    return (newContents);
+}
+
+function _replaceRealNewlinesInCSV(contents, newLineReplacement) {
+    //temp fix
+    //contents=contents.split("\r\n").join("\n");
+    //temp fix
+    let newContents = "";
+    let inside = -1;
+    for (let i = 0; i < contents.length; i++) {
+        let thisChar = contents.charAt(i);
+        if (thisChar === '"') {
+            inside = inside * -1;
+            newContents += thisChar;
+        }
+        // else if (thisChar === ",") {
+        //     if (inside === -1) {//comma is outside of quotes, replace
+        //         newContents += commaReplacement;
+        //     }
+        //     else {//comma is inside of quotes, don't replace
+        //         newContents += thisChar;
+        //     }
+        // }
+        else if (thisChar === "\n") {
+            if (inside === -1) {//\n is outside of quotes, replace
+                newContents += newLineReplacement;
+            }
+            else {//comma is inside of quotes, don't replace
+                newContents += thisChar;
+            }
+        }
+        else {
+            newContents += thisChar;
+        }
+    }
+    return (newContents);
+}
+
+
+
 function _replaceRealCommasAndRealNewlinesInCSV(contents, commaReplacement, newlineReplacement) {
-	//temp fix
-	contents=contents.split("\r\n").join("\n");
-	//temp fix
+    //temp fix
+    //contents=contents.split("\r\n").join("\n");
+    //temp fix
     let newContents = "";
     let inside = -1;
     for (let i = 0; i < contents.length; i++) {
@@ -41,8 +115,7 @@ function _replaceRealCommasAndRealNewlinesInCSV(contents, commaReplacement, newl
                 newContents += thisChar;
             }
         }
-        else
-        {
+        else {
             newContents += thisChar;
         }
     }
@@ -65,27 +138,52 @@ function tokenMaker(intSize) {
     return token;
 }
 
+//Works with earlier versions of NodeJS and anywhere replaceAll not available
+//from: https://stackoverflow.com/questions/62825358/javascript-replaceall-is-not-a-function-type-error
+//author: https://stackoverflow.com/users/9513184/unmitigated
+//Taken from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+}
+function myReplaceAll(str, match, replacement) {
+    return str.replace(new RegExp(escapeRegExp(match), 'g'), () => replacement);
+}
 
+
+function getTokenNotInString(myString, intSize = 16) {
+    let token = tokenMaker(16);
+    while (myString.indexOf(token) !== -1) {
+        token = tokenMaker(16);
+    }
+    return token;
+}
 function csvToArrays(CSVString) {
+    // CSVString.split("\r\n").join("\n");
+    // CSVString.split("\r\n").join("\n");
+    //CSVString = myReplaceAll(CSVString,"\r\n", "\n");
+    let carriageReturnToken = getTokenNotInString(CSVString);
+    CSVString = CSVString.split("\r").join(carriageReturnToken);
+    CSVString = CSVString.split(carriageReturnToken + "\n").join("\n");
+
     let myArray = []; //initialization
     CSVString = CSVString.trim();
-    
-    //lines = CSVString.split("\n"); //split lines
-    let commaToken = tokenMaker(16);
+
+    let commaToken = getTokenNotInString(CSVString);
+
+    CSVString = _replaceReallCommmasInCSV(CSVString, commaToken);
+
+    let newlineToken = getTokenNotInString(CSVString);
     //find a string that is not present in CSV for using as temporary tag
-    while (CSVString.indexOf(commaToken) !== -1) {
-        commaToken = tokenMaker(16);
-    }
+    //while (CSVString.indexOf(newlineToken) !== -1) {
+    //    newlineToken = tokenMaker(16);
+    //}
 
-    let newlineToken = tokenMaker(16);
-    //find a string that is not present in CSV for using as temporary tag
-    while (CSVString.indexOf(newlineToken) !== -1) {
-        newlineToken = tokenMaker(16);
-    }
+    CSVString = _replaceRealNewlinesInCSV(CSVString, newlineToken);
+    /////////////REALLY should be doing one string replacement at a time, not 2
 
-    CSVString=_replaceRealCommasAndRealNewlinesInCSV(CSVString,commaToken,newlineToken);
+    //CSVString = _replaceRealCommasAndRealNewlinesInCSV(CSVString, commaToken, newlineToken);
 
-    let lines =CSVString.split(newlineToken);
+    let lines = CSVString.split(newlineToken);
 
     for (let i = 0; i < lines.length; i++) {
         //an array of cells from row in csv line
@@ -108,7 +206,7 @@ function csvToArrays(CSVString) {
     return myArray;
 }
 
-function arraysToCSV(arrayOfArrays, newLineString="\n") {
+function arraysToCSV(arrayOfArrays, newLineString = "\n") {
     let CSVString = "";
     //go through each 'line'
     for (let i = 0; i < arrayOfArrays.length; i++) {
@@ -214,7 +312,7 @@ function csvToJSON(csvString, usingHeaders = true) {
     return jsonObject;
 }
 
-function JSONToCSV(jsonObject, includeHeaders = true, newLineString="\n") {
+function JSONToCSV(jsonObject, includeHeaders = true, newLineString = "\n") {
     let arrays = JSONToArrays(jsonObject, includeHeaders);
     let csvString = arraysToCSV(arrays, newLineString);
     return csvString;
