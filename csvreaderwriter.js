@@ -161,6 +161,9 @@ function csvToArrays(CSVString) {
     // CSVString.split("\r\n").join("\n");
     // CSVString.split("\r\n").join("\n");
     //CSVString = myReplaceAll(CSVString,"\r\n", "\n");
+
+    CSVString=CSVString.trim();
+
     let carriageReturnToken = getTokenNotInString(CSVString);
     CSVString = CSVString.split("\r").join(carriageReturnToken);
     CSVString = CSVString.split(carriageReturnToken + "\n").join("\n");
