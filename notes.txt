@@ -1,0 +1,19 @@
+You need to quote a value in a CSV file when it contains a comma, a double quote character, or a line break, as these characters are used as delimiters in the CSV format and could otherwise be misinterpreted as separating different fields within a single value; essentially, quotes are used to "escape" these special characters and ensure the entire value is read correctly. 
+
+Key points about quoting in CSV:
+
+Commas within a field:
+If a single field contains a comma, the entire field must be enclosed in quotes to prevent the comma from being interpreted as a field separator. 
+Double quotes within a field:
+
+If a field contains a double quote character, you need to "escape" it by using two consecutive double quotes within the quoted field. 
+Line breaks within a field:
+
+While not always supported by every CSV parser, if a field contains a line break, it should also be enclosed in quotes to preserve the entire value. 
+
+Example:
+Unquoted: "First Name, Last Name"
+
+Correctly quoted: "John ""Doe"", "
+
+Explanation: The double quotes within "Doe" are escaped by using two consecutive double quotes
