@@ -425,7 +425,9 @@ function determineLineTerminator(text) {
 
         // Check for line terminators only when not in quotes
         if (!inQuotes) {
-            if (text.substr(i, 2) === '\r\n') {
+            //if (text.substr(i, 2) === '\r\n') 
+            if (text.slice(i, i + 2) === '\r\n')
+            {
                 lineTerminators['\r\n']++;
                 i++; // Skip the next character since it's part of CRLF
             } else if (char === '\n') {
